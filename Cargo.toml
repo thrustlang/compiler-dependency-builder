@@ -1,12 +1,11 @@
 [package]
-name = "compiler-builder"
-description = "The compiler builder for Thrush Programming Language."
+name = "compiler-dependency-builder"
+description = "Main compiler dependency builder for Thrust Compiler."
 license = "GPL-3.0"
 version = "1.0.0"
 edition = "2024"
 
 authors = [
-    "Thrush Team <thrushlangproject@gmail.com>",
     "Stevens Benavides <foss.stevens.benavides@gmail.com>"
 ]
 
