@@ -6,7 +6,6 @@ mod cli;
 mod constants;
 mod gcc;
 mod help;
-mod libclang;
 mod llvm;
 mod logging;
 mod options;

@@ -1,6 +1,6 @@
 use crate::logging::LoggingType;
 use crate::options::BuildOptions;
-use crate::{gcc, libclang, llvm, logging, utils};
+use crate::{gcc, llvm, logging, utils};
 
 #[derive(Debug)]
 pub struct CompilerBuilderDependencies<'a> {
@@ -22,11 +22,6 @@ impl<'a> CompilerBuilderDependencies<'a> {
             .unwrap_or_else(|error| logging::log(LoggingType::Panic, &error));
 
         logging::write(logging::OutputIn::Stdout, "LLVM installed.\n\n");
-
-        self.build_cbindgen()
-            .unwrap_or_else(|error| logging::log(LoggingType::Panic, &error));
-
-        logging::write(logging::OutputIn::Stdout, "libclang installed.\n\n");
 
         if options.get_build_gcc_backend() {
             self.build_gcc_project()
@@ -61,36 +56,6 @@ impl CompilerBuilderDependencies<'_> {
 
         llvm::prepare_build_directory(&llvm_source)?;
         llvm::build_and_install(llvm_build, llvm_downloaded, llvm_source)?;
-
-        Ok(())
-    }
-}
-
-impl CompilerBuilderDependencies<'_> {
-    fn build_cbindgen(&self) -> Result<(), String> {
-        let llvm_build: &libclang::LibClang = self.get_build_options().get_cbindgen_build();
-
-        if utils::get_compiler_libclang_build_path().exists() {
-            logging::write(
-                logging::OutputIn::Stdout,
-                "Libclang was installed before, skipping...\n",
-            );
-
-            return Ok(());
-        }
-
-        utils::reset_compiler_libclang_build_path();
-
-        logging::write(logging::OutputIn::Stdout, "Downloading Clang source...\n");
-
-        let llvm_downloaded: std::path::PathBuf = libclang::download_llvm(llvm_build)?;
-        let llvm_source: std::path::PathBuf =
-            libclang::decompress_llvm(llvm_build, &llvm_downloaded)?;
-
-        logging::write(logging::OutputIn::Stdout, "Building Clang from source...\n");
-
-        libclang::prepare_build_directory(&llvm_source)?;
-        libclang::build_and_install(llvm_build, llvm_downloaded, llvm_source)?;
 
         Ok(())
     }
