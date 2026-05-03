@@ -494,7 +494,7 @@ pub fn show_help() -> ! {
         logging::OutputIn::Stderr,
         &format!(
             "{} {} {}\n",
-            "•", "-gcc", "Enable to build GCC backend for the compiler.",
+            "•", "--gcc", "Enable to build GCC backend for the compiler.",
         ),
     );
 
@@ -573,7 +573,7 @@ pub fn show_help() -> ! {
         logging::OutputIn::Stderr,
         &format!(
             "{} {} {}\n",
-            "•", "--clean-llvm-installtion", "Deletes the current LLVM installation.",
+            "•", "--clean-llvm-installation", "Deletes the current LLVM installation.",
         ),
     );
 
@@ -581,7 +581,7 @@ pub fn show_help() -> ! {
         logging::OutputIn::Stderr,
         &format!(
             "{} {} {}\n\n",
-            "•", "--clean-libclang-installtion", "Deletes the current libclang installation.",
+            "•", "--clean-libclang-installation", "Deletes the current libclang installation.",
         ),
     );
 

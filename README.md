@@ -84,7 +84,7 @@ For more information: https://clang.llvm.org/docs/LibClang.html
 
 GCC build flags:
 
-• -gcc Enable to build GCC backend for the compiler.
+• --gcc Enable to build GCC backend for the compiler.
 • --gcc-major Set GCC major version (default: 15).
 • --gcc-minor Set GCC minor version (default: 2).
 • --gcc-patch Set GCC patch version (default: 0).
@@ -98,8 +98,8 @@ For more information: https://gcc.gnu.org/onlinedocs/jit/internals/index.html#wo
 
 Installation flags:
 
-• --clean-llvm-installtion Deletes the current LLVM installation.
-• --clean-libclang-installtion Deletes the current libclang installation.
+• --clean-llvm-installation Deletes the current LLVM installation.
+• --clean-libclang-installation Deletes the current libclang installation.
 
 Debug flags:
 

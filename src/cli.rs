@@ -435,7 +435,7 @@ impl CommandLine {
                 self.advance();
             }
 
-            "-gcc" => {
+            "--gcc" => {
                 self.advance();
                 self.get_mut_options().set_build_gcc_backend(true);
             }

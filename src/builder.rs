@@ -16,22 +16,20 @@ impl<'a> CompilerBuilderDependencies<'a> {
 
 impl<'a> CompilerBuilderDependencies<'a> {
     pub fn build(&self) {
-        let options: &BuildOptions = self.get_options();
+        let options: &BuildOptions = self.get_build_options();
 
-        if self.get_options().get_build_cbindgen() {
-            self.build_cbindgen()
-                .unwrap_or_else(|error| logging::log(LoggingType::Panic, &error));
-
-            logging::write(logging::OutputIn::Stdout, "libclang installed.\n\n");
-        }
-
-        self.build_llvm()
+        self.build_llvm_project()
             .unwrap_or_else(|error| logging::log(LoggingType::Panic, &error));
 
         logging::write(logging::OutputIn::Stdout, "LLVM installed.\n\n");
 
+        self.build_cbindgen()
+            .unwrap_or_else(|error| logging::log(LoggingType::Panic, &error));
+
+        logging::write(logging::OutputIn::Stdout, "libclang installed.\n\n");
+
         if options.get_build_gcc_backend() {
-            self.build_gcc()
+            self.build_gcc_project()
                 .unwrap_or_else(|error| logging::log(LoggingType::Panic, &error));
 
             logging::write(logging::OutputIn::Stdout, "GCC installed.\n\n");
@@ -40,8 +38,8 @@ impl<'a> CompilerBuilderDependencies<'a> {
 }
 
 impl CompilerBuilderDependencies<'_> {
-    fn build_llvm(&self) -> Result<(), String> {
-        let llvm_build: &llvm::LLVMBuild = self.get_options().get_llvm_build();
+    fn build_llvm_project(&self) -> Result<(), String> {
+        let llvm_build: &llvm::LLVMBuild = self.get_build_options().get_llvm_build();
 
         if utils::get_compiler_llvm_build_path().exists() {
             logging::write(
@@ -66,9 +64,11 @@ impl CompilerBuilderDependencies<'_> {
 
         Ok(())
     }
+}
 
+impl CompilerBuilderDependencies<'_> {
     fn build_cbindgen(&self) -> Result<(), String> {
-        let llvm_build: &clang::LibClang = self.get_options().get_cbindgen_build();
+        let llvm_build: &clang::LibClang = self.get_build_options().get_cbindgen_build();
 
         if utils::get_compiler_libclang_build_path().exists() {
             logging::write(
@@ -79,7 +79,7 @@ impl CompilerBuilderDependencies<'_> {
             return Ok(());
         }
 
-        utils::reset_compiler_clang_build_path();
+        utils::reset_compiler_libclang_build_path();
 
         logging::write(logging::OutputIn::Stdout, "Downloading Clang source...\n");
 
@@ -93,9 +93,11 @@ impl CompilerBuilderDependencies<'_> {
 
         Ok(())
     }
+}
 
-    fn build_gcc(&self) -> Result<(), String> {
-        let gcc_build: &gcc::GCCBuild = self.get_options().get_gcc_build();
+impl CompilerBuilderDependencies<'_> {
+    fn build_gcc_project(&self) -> Result<(), String> {
+        let gcc_build: &gcc::GCCBuild = self.get_build_options().get_gcc_build();
 
         logging::write(logging::OutputIn::Stdout, "Downloading GCC source...\n");
 
@@ -113,7 +115,7 @@ impl CompilerBuilderDependencies<'_> {
 
 impl CompilerBuilderDependencies<'_> {
     #[inline]
-    pub fn get_options(&self) -> &BuildOptions {
+    pub fn get_build_options(&self) -> &BuildOptions {
         self.options
     }
 }

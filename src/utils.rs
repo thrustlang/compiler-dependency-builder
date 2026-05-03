@@ -80,7 +80,7 @@ pub fn reset_compiler_llvm_build_path() {
 }
 
 #[inline]
-pub fn reset_compiler_clang_build_path() {
+pub fn reset_compiler_libclang_build_path() {
     let _ = std::fs::remove_dir(self::get_compiler_libclang_build_path());
     let _ = std::fs::create_dir_all(self::get_compiler_libclang_build_path());
 }
