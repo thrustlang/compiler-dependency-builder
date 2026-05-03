@@ -16,29 +16,25 @@ impl<'a> CompilerBuilderDependencies<'a> {
 
 impl<'a> CompilerBuilderDependencies<'a> {
     pub fn build(&self) {
-        if let Err(err) = self.build_llvm() {
-            logging::log(LoggingType::Panic, &err);
-        }
-
-        logging::write(logging::OutputIn::Stdout, "LLVM backend installed.\n\n");
-
-        if self.get_options().get_build_gcc_backend() {
-            if let Err(err) = self.build_gcc() {
-                logging::log(LoggingType::Panic, &err);
-            }
-
-            logging::write(logging::OutputIn::Stdout, "GCC backend installed.\n\n");
-        }
+        let options: &BuildOptions = self.get_options();
 
         if self.get_options().get_build_cbindgen() {
-            if let Err(err) = self.build_cbindgen() {
-                logging::log(LoggingType::Panic, &err);
-            }
+            self.build_cbindgen()
+                .unwrap_or_else(|error| logging::log(LoggingType::Panic, &error));
 
-            logging::write(
-                logging::OutputIn::Stdout,
-                "Clang installed and configured for the CBindgen.\n\n",
-            );
+            logging::write(logging::OutputIn::Stdout, "libclang installed.\n\n");
+        }
+
+        self.build_llvm()
+            .unwrap_or_else(|error| logging::log(LoggingType::Panic, &error));
+
+        logging::write(logging::OutputIn::Stdout, "LLVM installed.\n\n");
+
+        if options.get_build_gcc_backend() {
+            self.build_gcc()
+                .unwrap_or_else(|error| logging::log(LoggingType::Panic, &error));
+
+            logging::write(logging::OutputIn::Stdout, "GCC installed.\n\n");
         }
     }
 }
@@ -47,14 +43,23 @@ impl CompilerBuilderDependencies<'_> {
     fn build_llvm(&self) -> Result<(), String> {
         let llvm_build: &llvm::LLVMBuild = self.get_options().get_llvm_build();
 
+        if utils::get_compiler_llvm_build_path().exists() {
+            logging::write(
+                logging::OutputIn::Stdout,
+                "LLVM was installed before, skipping...\n",
+            );
+
+            return Ok(());
+        }
+
         utils::reset_compiler_llvm_build_path();
 
-        logging::write(logging::OutputIn::Stdout, "Downloading LLVM...\n");
+        logging::write(logging::OutputIn::Stdout, "Downloading LLVM source...\n");
 
         let llvm_downloaded: std::path::PathBuf = llvm::download_llvm(llvm_build)?;
         let llvm_source: std::path::PathBuf = llvm::decompress_llvm(llvm_build, &llvm_downloaded)?;
 
-        logging::write(logging::OutputIn::Stdout, "Building LLVM...\n");
+        logging::write(logging::OutputIn::Stdout, "Building LLVM from source...\n");
 
         llvm::prepare_build_directory(&llvm_source)?;
         llvm::build_and_install(llvm_build, llvm_downloaded, llvm_source)?;
@@ -62,36 +67,45 @@ impl CompilerBuilderDependencies<'_> {
         Ok(())
     }
 
-    fn build_gcc(&self) -> Result<(), String> {
-        let gcc_build: &gcc::GCCBuild = self.get_options().get_gcc_build();
-
-        logging::write(logging::OutputIn::Stdout, "Downloading GCC...\n");
-
-        let gcc_downloaded: std::path::PathBuf = gcc::download_gcc(gcc_build)?;
-        let gcc_source: std::path::PathBuf = gcc::decompress_gcc(gcc_build, &gcc_downloaded)?;
-
-        logging::write(logging::OutputIn::Stdout, "Building GCC...\n");
-
-        gcc::prepare_build_directory(&gcc_source)?;
-        gcc::build_and_install(gcc_build, gcc_downloaded, gcc_source)?;
-
-        Ok(())
-    }
-
     fn build_cbindgen(&self) -> Result<(), String> {
         let llvm_build: &clang::LibClang = self.get_options().get_cbindgen_build();
 
+        if utils::get_compiler_libclang_build_path().exists() {
+            logging::write(
+                logging::OutputIn::Stdout,
+                "Libclang was installed before, skipping...\n",
+            );
+
+            return Ok(());
+        }
+
         utils::reset_compiler_clang_build_path();
 
-        logging::write(logging::OutputIn::Stdout, "Downloading Clang...\n");
+        logging::write(logging::OutputIn::Stdout, "Downloading Clang source...\n");
 
         let llvm_downloaded: std::path::PathBuf = clang::download_llvm(llvm_build)?;
         let llvm_source: std::path::PathBuf = clang::decompress_llvm(llvm_build, &llvm_downloaded)?;
 
-        logging::write(logging::OutputIn::Stdout, "Building Clang...\n");
+        logging::write(logging::OutputIn::Stdout, "Building Clang from source...\n");
 
         clang::prepare_build_directory(&llvm_source)?;
         clang::build_and_install(llvm_build, llvm_downloaded, llvm_source)?;
+
+        Ok(())
+    }
+
+    fn build_gcc(&self) -> Result<(), String> {
+        let gcc_build: &gcc::GCCBuild = self.get_options().get_gcc_build();
+
+        logging::write(logging::OutputIn::Stdout, "Downloading GCC source...\n");
+
+        let gcc_downloaded: std::path::PathBuf = gcc::download_gcc(gcc_build)?;
+        let gcc_source: std::path::PathBuf = gcc::decompress_gcc(gcc_build, &gcc_downloaded)?;
+
+        logging::write(logging::OutputIn::Stdout, "Building GCC from source...\n");
+
+        gcc::prepare_build_directory(&gcc_source)?;
+        gcc::build_and_install(gcc_build, gcc_downloaded, gcc_source)?;
 
         Ok(())
     }

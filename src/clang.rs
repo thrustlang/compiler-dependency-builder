@@ -466,7 +466,7 @@ pub fn build_and_install(
 ) -> Result<(), String> {
     let build_dir: PathBuf = llvm_source.join("llvm").join("build");
     let parent: &Path = build_dir.parent().unwrap_or(&build_dir);
-    let install_dir: PathBuf = utils::get_compiler_clang_build_path();
+    let install_dir: PathBuf = utils::get_compiler_libclang_build_path();
 
     let mut cmake_binding: std::process::Command = std::process::Command::new("cmake");
 

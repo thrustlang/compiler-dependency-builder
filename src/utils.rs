@@ -45,7 +45,7 @@ pub fn get_compiler_llvm_build_path() -> PathBuf {
     }
 }
 
-pub fn get_compiler_clang_build_path() -> PathBuf {
+pub fn get_compiler_libclang_build_path() -> PathBuf {
     match std::env::consts::FAMILY {
         "unix" => PathBuf::from(std::env::var("HOME").unwrap_or_else(|_| {
             logging::log(LoggingType::Panic, "Missing $HOME environment variable.\n");
@@ -81,6 +81,6 @@ pub fn reset_compiler_llvm_build_path() {
 
 #[inline]
 pub fn reset_compiler_clang_build_path() {
-    let _ = std::fs::remove_dir(self::get_compiler_clang_build_path());
-    let _ = std::fs::create_dir_all(self::get_compiler_clang_build_path());
+    let _ = std::fs::remove_dir(self::get_compiler_libclang_build_path());
+    let _ = std::fs::create_dir_all(self::get_compiler_libclang_build_path());
 }

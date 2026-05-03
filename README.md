@@ -30,9 +30,8 @@ Commands:
 
 LLVM build flags:
 
-• -llvm-enable-pipeline Enable a custom build pipeline for LLVM.
-• -llvm-pipeline ["-DLLVM_ENABLE_PROJECTS="clang;lldb";;-DLLVM_TARGETS_TO_BUILD=X86"] Set the custom build pipeline for LLVM. Separators in the string are ';;'.
-
+• --llvm-enable-pipeline Enable a custom build pipeline for LLVM.
+• --llvm-pipeline ["-DLLVM_ENABLE_PROJECTS="clang;lldb";;-DLLVM_TARGETS_TO_BUILD=X86"] Set the custom build pipeline for LLVM. Separators in the string are ';;'.
 • --llvm-major Set LLVM major version (default: 17).
 • --llvm-minor Set LLVM minor version (default: 0).
 • --llvm-patch Set LLVM patch version (default: 6).
@@ -96,6 +95,11 @@ GCC build flags:
 • --gcc-cpp-compiler-command [g++] Set C++ compiler command for GCC build.
 
 For more information: https://gcc.gnu.org/onlinedocs/jit/internals/index.html#working-on-the-jit-library
+
+Installation flags:
+
+• --clean-llvm-installtion Deletes the current LLVM installation.
+• --clean-libclang-installtion Deletes the current libclang installation.
 
 Debug flags:
 

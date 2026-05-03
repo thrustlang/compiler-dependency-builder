@@ -2,6 +2,7 @@
 pub enum LoggingType {
     Error,
     Panic,
+    Warning,
     Debug,
 }
 
@@ -16,6 +17,7 @@ impl std::fmt::Display for LoggingType {
         match self {
             LoggingType::Error => write!(f, "ERROR"),
             LoggingType::Panic => write!(f, "PANIC"),
+            LoggingType::Warning => write!(f, "WARNING"),
             LoggingType::Debug => write!(f, "DEBUG"),
         }
     }

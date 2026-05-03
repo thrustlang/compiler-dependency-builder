@@ -69,7 +69,7 @@ impl CommandLine {
             args.remove(0);
         }
 
-        args.iter().for_each(|arg| {
+        for arg in args.iter() {
             let parsed: ParsedArg = ParsedArg::new(arg);
 
             processed.push(parsed.key);
@@ -77,7 +77,7 @@ impl CommandLine {
             if let Some(value) = parsed.value {
                 processed.push(value);
             }
-        });
+        }
 
         processed
     }
@@ -90,8 +90,7 @@ impl CommandLine {
             self.analyze(argument);
         }
 
-        self.check_requirements();
-
+        self.check_tools_requirements();
         self.prepare_all();
     }
 
@@ -107,7 +106,7 @@ impl CommandLine {
         }
     }
 
-    fn check_requirements(&self) {
+    fn check_tools_requirements(&self) {
         if !utils::tar_is_available() {
             logging::log(LoggingType::Error, "tar is not installed.\n");
         }
@@ -124,6 +123,7 @@ impl CommandLine {
             utils::tar_is_available() && utils::cmake_is_available() && utils::ninja_is_available();
 
         if !failed {
+            logging::log(LoggingType::Warning, "You must install these tools!\n");
             logging::log(LoggingType::Panic, "Requirements aren't ok!\n\n");
         }
     }
@@ -141,14 +141,16 @@ impl CommandLine {
 
             "-v" | "--version" | "version" => {
                 self.advance();
+
                 logging::write(
                     logging::OutputIn::Stdout,
-                    constants::COMPILER_BUILDER_VERSION,
+                    constants::COMPILER_DEPENDENCY_BUILDER_VERSION,
                 );
+
                 std::process::exit(0);
             }
 
-            "-llvm-enable-custom-pipeline" => {
+            "--llvm-enable-pipeline" => {
                 self.advance();
 
                 self.get_mut_options()
@@ -156,7 +158,7 @@ impl CommandLine {
                     .set_build_with_custom_pipeline(true);
             }
 
-            "-llvm-pipeline" => {
+            "--llvm-pipeline" => {
                 self.advance();
                 self.valitate_llvm_custom_pipeline_required(arg);
 
@@ -528,12 +530,12 @@ impl CommandLine {
                 self.advance();
             }
 
-            "--cbindgen" => {
+            "--libclang" => {
                 self.advance();
                 self.get_mut_options().set_build_cbindgen(true);
             }
 
-            "--cbindgen-major" => {
+            "--libclang-major" => {
                 self.advance();
 
                 let major: u32 = self.peek().to_string().parse().unwrap_or(17);
@@ -544,7 +546,7 @@ impl CommandLine {
                 self.advance();
             }
 
-            "--cbindgen-minor" => {
+            "--libclang-minor" => {
                 self.advance();
 
                 let minor: u32 = self.peek().to_string().parse().unwrap_or(0);
@@ -555,7 +557,7 @@ impl CommandLine {
                 self.advance();
             }
 
-            "--cbindgen-patch" => {
+            "--libclang-patch" => {
                 self.advance();
 
                 let patch: u32 = self.peek().to_string().parse().unwrap_or(0);
@@ -566,7 +568,7 @@ impl CommandLine {
                 self.advance();
             }
 
-            "--cbindgen-c-compiler" => {
+            "--libclang-c-compiler" => {
                 self.advance();
 
                 let c_compiler: String = self.peek().to_string();
@@ -578,7 +580,7 @@ impl CommandLine {
                 self.advance();
             }
 
-            "--cbindgen-cpp-compiler" => {
+            "--libclang-cpp-compiler" => {
                 self.advance();
 
                 let cpp_compiler: String = self.peek().to_string();
@@ -590,7 +592,7 @@ impl CommandLine {
                 self.advance();
             }
 
-            "--cbindgen-cpp-flags" => {
+            "--libclang-cpp-flags" => {
                 self.advance();
 
                 let flags: String = self.peek().to_string();
@@ -602,7 +604,7 @@ impl CommandLine {
                 self.advance();
             }
 
-            "--cbindgen-c-flags" => {
+            "--libclang-c-flags" => {
                 self.advance();
 
                 let flags: String = self.peek().to_string();
@@ -614,7 +616,7 @@ impl CommandLine {
                 self.advance();
             }
 
-            "--cbindgen-release-type" => {
+            "--libclang-release-type" => {
                 self.advance();
 
                 match self.peek() {
@@ -646,7 +648,7 @@ impl CommandLine {
                 self.advance();
             }
 
-            "--cbindgen-build-share-libs" => {
+            "--libclang-build-share-libs" => {
                 self.advance();
 
                 let build_share_libs: bool = self.peek().to_string().parse().unwrap_or(true);
@@ -658,7 +660,7 @@ impl CommandLine {
                 self.advance();
             }
 
-            "--cbindgen-build-x86-libs" => {
+            "--libclang-build-x86-libs" => {
                 self.advance();
 
                 let build_x86_libs: bool = self.peek().to_string().parse().unwrap_or(true);
@@ -670,7 +672,7 @@ impl CommandLine {
                 self.advance();
             }
 
-            "--cbindgen-build-dylib" => {
+            "--libclang-build-dylib" => {
                 self.advance();
 
                 let build_dylib: bool = self.peek().to_string().parse().unwrap_or(true);
@@ -682,7 +684,7 @@ impl CommandLine {
                 self.advance();
             }
 
-            "--cbindgen-link-statically-libcpp" => {
+            "--libclang-link-statically-libcpp" => {
                 self.advance();
 
                 let link_statically_libcpp: bool = self.peek().to_string().parse().unwrap_or(true);
@@ -694,7 +696,7 @@ impl CommandLine {
                 self.advance();
             }
 
-            "--cbindgen-use-linker" => {
+            "--libclang-use-linker" => {
                 self.advance();
 
                 let use_linker: String = self.peek().to_string();
@@ -706,7 +708,7 @@ impl CommandLine {
                 self.advance();
             }
 
-            "--cbindgen-use-llvm-libc" => {
+            "--libclang-use-llvm-libc" => {
                 self.advance();
 
                 let use_llvm_libc: bool = self.peek().parse().unwrap_or(false);
@@ -718,7 +720,7 @@ impl CommandLine {
                 self.advance();
             }
 
-            "--cbindgen-pic" => {
+            "--libclang-pic" => {
                 self.advance();
 
                 let enable_pic: bool = self.peek().parse().unwrap_or(true);
@@ -730,7 +732,7 @@ impl CommandLine {
                 self.advance();
             }
 
-            "--cbindgen-libcpp" => {
+            "--libclang-libcpp" => {
                 self.advance();
 
                 let enable_libcpp: bool = self.peek().parse().unwrap_or(false);
@@ -742,7 +744,7 @@ impl CommandLine {
                 self.advance();
             }
 
-            "--cbindgen-clang-modules" => {
+            "--libclang-clang-modules" => {
                 self.advance();
 
                 let enable_clang_modules: bool = self.peek().parse().unwrap_or(false);
@@ -754,7 +756,7 @@ impl CommandLine {
                 self.advance();
             }
 
-            "--cbindgen-pdb" => {
+            "--libclang-pdb" => {
                 self.advance();
 
                 let enable_pdb: bool = self.peek().parse().unwrap_or(false);
@@ -766,7 +768,7 @@ impl CommandLine {
                 self.advance();
             }
 
-            "--cbindgen-temporarily-old-toolchain" => {
+            "--libclang-temporarily-old-toolchain" => {
                 self.advance();
 
                 let temporarily_old_toolchain: bool = self.peek().parse().unwrap_or(false);
@@ -778,7 +780,7 @@ impl CommandLine {
                 self.advance();
             }
 
-            "--cbindgen-optimize-tblgen" => {
+            "--libclang-optimize-tblgen" => {
                 self.advance();
 
                 let optimize_tblgen: bool = self.peek().parse().unwrap_or(false);
@@ -788,6 +790,14 @@ impl CommandLine {
                     .set_optimize_tblgen(optimize_tblgen);
 
                 self.advance();
+            }
+
+            "--clean-llvm-installation" => {
+                let _ = std::fs::remove_dir_all(utils::get_compiler_llvm_build_path());
+            }
+
+            "--clean-libclang-installation" => {
+                let _ = std::fs::remove_dir_all(utils::get_compiler_libclang_build_path());
             }
 
             "--debug-cbindgen" => {

@@ -35,16 +35,16 @@ pub fn show_help() -> ! {
         logging::OutputIn::Stderr,
         &format!(
             "{} {} {}\n",
-            "•", "-llvm-enable-pipeline", "Enable a custom build pipeline for LLVM.",
+            "•", "--llvm-enable-pipeline", "Enable a custom build pipeline for LLVM.",
         ),
     );
 
     logging::write(
         logging::OutputIn::Stderr,
         &format!(
-            "{} {} {} {}\n\n",
+            "{} {} {} {}\n",
             "•",
-            "-llvm-pipeline",
+            "--llvm-pipeline",
             "[\"-DLLVM_ENABLE_PROJECTS=\"clang;lldb\";;-DLLVM_TARGETS_TO_BUILD=X86\"]",
             "Set the custom build pipeline for LLVM. Separators in the string are ';;'.",
         ),
@@ -565,6 +565,24 @@ pub fn show_help() -> ! {
     logging::write(
         logging::OutputIn::Stderr,
         "For more information: https://gcc.gnu.org/onlinedocs/jit/internals/index.html#working-on-the-jit-library\n\n",
+    );
+
+    logging::write(logging::OutputIn::Stderr, "Installation flags:\n\n");
+
+    logging::write(
+        logging::OutputIn::Stderr,
+        &format!(
+            "{} {} {}\n",
+            "•", "--clean-llvm-installtion", "Deletes the current LLVM installation.",
+        ),
+    );
+
+    logging::write(
+        logging::OutputIn::Stderr,
+        &format!(
+            "{} {} {}\n\n",
+            "•", "--clean-libclang-installtion", "Deletes the current libclang installation.",
+        ),
     );
 
     logging::write(logging::OutputIn::Stderr, "Debug flags:\n\n");
