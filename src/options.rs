@@ -7,7 +7,6 @@ pub struct BuildOptions {
     gcc_build: GCCBuild,
 
     build_gcc_backend: bool,
-    build_cbindgen: bool,
 }
 
 impl BuildOptions {
@@ -18,7 +17,6 @@ impl BuildOptions {
             gcc_build: GCCBuild::new(),
 
             build_gcc_backend: false,
-            build_cbindgen: false,
         }
     }
 }

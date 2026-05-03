@@ -58,8 +58,8 @@ impl LLVMBuild {
             minor: 0,
             patch: 6,
 
-            c_compiler: "gcc".into(),
-            cpp_compiler: "g++".into(),
+            c_compiler: "clang".into(),
+            cpp_compiler: "clang++".into(),
 
             cflags: String::default(),
             cppflags: String::default(),
