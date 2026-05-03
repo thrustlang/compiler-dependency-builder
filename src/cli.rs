@@ -793,10 +793,14 @@ impl CommandLine {
             }
 
             "--clean-llvm-installation" => {
+                self.advance();
+
                 let _ = std::fs::remove_dir_all(utils::get_compiler_llvm_build_path());
             }
 
             "--clean-libclang-installation" => {
+                self.advance();
+
                 let _ = std::fs::remove_dir_all(utils::get_compiler_libclang_build_path());
             }
 
