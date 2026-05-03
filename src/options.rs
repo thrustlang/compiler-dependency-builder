@@ -1,5 +1,5 @@
-use crate::clang::LibClang;
 use crate::gcc::GCCBuild;
+use crate::libclang::LibClang;
 use crate::llvm::LLVMBuild;
 
 #[derive(Debug)]

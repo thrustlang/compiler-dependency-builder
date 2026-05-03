@@ -1,6 +1,6 @@
-use crate::clang;
 use crate::constants;
 use crate::help;
+use crate::libclang;
 use crate::llvm;
 use crate::logging;
 use crate::logging::LoggingType;
@@ -623,25 +623,25 @@ impl CommandLine {
                     "Debug" => {
                         self.get_mut_options()
                             .get_mut_cbindgen_build()
-                            .set_release_type(clang::LLVMReleaseType::Debug);
+                            .set_release_type(libclang::LLVMReleaseType::Debug);
                     }
 
                     "Release" => {
                         self.get_mut_options()
                             .get_mut_cbindgen_build()
-                            .set_release_type(clang::LLVMReleaseType::Release);
+                            .set_release_type(libclang::LLVMReleaseType::Release);
                     }
 
                     "MinSizeRel" => {
                         self.get_mut_options()
                             .get_mut_cbindgen_build()
-                            .set_release_type(clang::LLVMReleaseType::MinSizeRel);
+                            .set_release_type(libclang::LLVMReleaseType::MinSizeRel);
                     }
 
                     _ => {
                         self.get_mut_options()
                             .get_mut_cbindgen_build()
-                            .set_release_type(clang::LLVMReleaseType::Release);
+                            .set_release_type(libclang::LLVMReleaseType::Release);
                     }
                 }
 
