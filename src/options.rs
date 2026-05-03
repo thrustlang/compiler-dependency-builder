@@ -47,11 +47,6 @@ impl BuildOptions {
     pub fn get_build_gcc_backend(&self) -> bool {
         self.build_gcc_backend
     }
-
-    #[inline]
-    pub fn get_build_cbindgen(&self) -> bool {
-        self.build_cbindgen
-    }
 }
 
 impl BuildOptions {

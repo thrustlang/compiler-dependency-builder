@@ -1,13 +1,13 @@
 use crate::logging;
 
 pub fn show_help() -> ! {
-    logging::write(logging::OutputIn::Stderr, "The Compiler Builder");
+    logging::write(logging::OutputIn::Stderr, "Compiler Dependency Builder");
 
     logging::write(
         logging::OutputIn::Stderr,
         &format!(
             "\n\n{} {} {}\n\n",
-            "Usage:", "compiler-builder", "[-flag|--flags]"
+            "Usage:", "compiler-dependency-builder", "[-flag|--flags]"
         ),
     );
 
@@ -268,226 +268,6 @@ pub fn show_help() -> ! {
         "For more information: https://llvm.org/docs/CMake.html\n\n",
     );
 
-    logging::write(logging::OutputIn::Stderr, "Libclang build flags:\n\n");
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {}\n",
-            "•", "--libclang", "Enable to build the libclang for the compiler.",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {}\n",
-            "•", "--libclang-major", "Set libclang major version (default: 17).",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {}\n",
-            "•", "--libclang-minor", "Set libclang minor version (default: 0).",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {}\n",
-            "•", "--libclang-patch", "Set libclang patch version (default: 0).",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {} {}\n",
-            "•",
-            "--libclang-c-compiler",
-            "[clang]",
-            "Set C compiler for libclang build (default: clang).",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {} {}\n",
-            "•",
-            "--libclang-cpp-compiler",
-            "[clang++]",
-            "Set C++ compiler for libclang build (default: clang++).",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {} {}\n",
-            "•", "--libclang-c-flags", "[-O3]", "Set C compiler flags for libclang build.",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {} {}\n",
-            "•", "--libclang-cpp-flags", "[-Oz]", "Set C++ compiler flags for libclang build.",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {} {}\n",
-            "•",
-            "--libclang-release-type",
-            "[Debug|Release|MinSizeRel]",
-            "Set libclang release type (Debug, Release, MinSizeRel) (default: Release).",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {} {}\n",
-            "•",
-            "--libclang-build-share-libs",
-            "[true|false]",
-            "Flag indicating if each libclang component is built as a shared library (ON) or as a static library (OFF) (default: true).",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {} {}\n",
-            "•",
-            "--libclang-build-x86-libs",
-            "[true|false]",
-            "Build 32-bit executables and libraries on 64-bit systems for libclang (default: true).",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {} {}\n",
-            "•",
-            "--libclang-build-dylib",
-            "[true|false]",
-            "If enabled, build libclang as a dynamic library (default: true).",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {} {}\n",
-            "•",
-            "--libclang-link-statically-libcpp",
-            "[true|false]",
-            "Statically link to the C++ standard library if possible for libclang (default: true).",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {} {}\n",
-            "•",
-            "--libclang-use-linker",
-            "[lld]",
-            "Override the system's default linker for libclang build.",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {} {}\n",
-            "•",
-            "--libclang-use-llvm-libc",
-            "[true|false]",
-            "Use LLVM libc overlay for libclang build (default: false).",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {} {}\n",
-            "•",
-            "--libclang-pic",
-            "[true|false]",
-            "Add the -fPIC flag to the compiler command-line for libclang (default: true).",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {} {}\n",
-            "•",
-            "--libclang-libcpp",
-            "[true|false]",
-            "Use libc++ instead of stdlibc++ for libclang build (default: false).",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {} {}\n",
-            "•",
-            "--libclang-clang-modules",
-            "[true|false]",
-            "Compile with Clang Header Modules for libclang (default: false).",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {} {}\n",
-            "•",
-            "--libclang-pdb",
-            "[true|false]",
-            "Generate PDB files for Windows builds using MSVC or clang-cl for libclang (default: false).",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {} {}\n",
-            "•",
-            "--libclang-temporarily-old-toolchain",
-            "[true|false]",
-            "Allow temporarily old toolchain for libclang build (default: false).",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {} {}\n\n",
-            "•",
-            "--libclang-optimize-tblgen",
-            "[true|false]",
-            "Optimize tablegen for libclang build (default: false).",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        "For more information: https://clang.llvm.org/docs/LibClang.html\n\n",
-    );
-
     logging::write(logging::OutputIn::Stderr, "GCC build flags:\n\n");
 
     logging::write(
@@ -573,15 +353,7 @@ pub fn show_help() -> ! {
         logging::OutputIn::Stderr,
         &format!(
             "{} {} {}\n",
-            "•", "--clean-llvm-installation", "Deletes the current LLVM installation.",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {}\n\n",
-            "•", "--clean-libclang-installation", "Deletes the current libclang installation.",
+            "•", "--clean-llvm-installation", "Deletes the current LLVM installation.\n",
         ),
     );
 
@@ -592,14 +364,6 @@ pub fn show_help() -> ! {
         &format!(
             "{} {} {}\n",
             "•", "--debug-llvm", "Debug LLVM build commands.",
-        ),
-    );
-
-    logging::write(
-        logging::OutputIn::Stderr,
-        &format!(
-            "{} {} {}\n",
-            "•", "--debug-libclang", "Debug libclang build commands.",
         ),
     );
 
