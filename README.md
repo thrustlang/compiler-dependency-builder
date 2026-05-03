@@ -1,6 +1,6 @@
 <img src= "https://github.com/thrushlang/.github/blob/main/assets/logos/thrustlang-logo-name.png" alt= "logo" style= "width: 80%; height: 80%;"></img>
 
-## Compiler Builder
+## Compiler Dependency Builder
 
 This small tool builds the necessary dependencies for the compiler and places them where they are needed for the compiler to be built.
 
