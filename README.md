@@ -2,6 +2,8 @@
 
 ## Compiler Dependency Builder
 
+<img src= "https://github.com/thrustlang/.github/blob/main/assets/standard-text-separator.png" alt= "standard-separator" style= "width: 1hv;"> </img>
+
 This small tool builds the necessary dependencies for the compiler and places them where they are needed for the compiler to be built.
 
 ## Dependencies that it builds
