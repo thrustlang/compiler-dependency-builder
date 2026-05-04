@@ -606,50 +606,19 @@ pub fn build_and_install(
 
         self::run_command_with_live_output(cmake_command, &llvm_archive_path, &llvm_source)?;
 
-        let mut ninja_llvm_build_binding: std::process::Command =
-            std::process::Command::new("ninja");
+        let mut ninja_build_command: std::process::Command = std::process::Command::new("ninja");
 
-        let ninja_llvm_build_command: &mut std::process::Command = ninja_llvm_build_binding
-            .arg("llvm")
-            .arg("-C")
-            .arg(&build_dir);
+        let ninja_build_command: &mut std::process::Command =
+            ninja_build_command.arg("-C").arg(&build_dir);
 
         if llvm_build.debug_commands() {
             logging::log(
                 logging::LoggingType::Debug,
-                &format!("Executing Ninja command: {:?}", ninja_llvm_build_command),
+                &format!("Executing Ninja command: {:?}", ninja_build_command),
             );
         }
 
-        self::run_command_with_live_output(
-            ninja_llvm_build_command,
-            &llvm_archive_path,
-            &llvm_source,
-        )?;
-
-        let mut ninja_libclang_build_binding: std::process::Command =
-            std::process::Command::new("ninja");
-
-        let ninja_libclang_build_command: &mut std::process::Command = ninja_libclang_build_binding
-            .arg("libclang")
-            .arg("-C")
-            .arg(&build_dir);
-
-        if llvm_build.debug_commands() {
-            logging::log(
-                logging::LoggingType::Debug,
-                &format!(
-                    "Executing Ninja command: {:?}",
-                    ninja_libclang_build_command
-                ),
-            );
-        }
-
-        self::run_command_with_live_output(
-            ninja_libclang_build_command,
-            &llvm_archive_path,
-            &llvm_source,
-        )?;
+        self::run_command_with_live_output(ninja_build_command, &llvm_archive_path, &llvm_source)?;
 
         let mut ninja_install_binding: std::process::Command = std::process::Command::new("ninja");
 
