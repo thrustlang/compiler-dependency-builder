@@ -45,7 +45,7 @@ impl CompilerBuilderDependencies<'_> {
             return Ok(());
         }
 
-        utils::reset_compiler_llvm_build_path();
+        utils::restore_llvm_build_path();
 
         logging::write(logging::OutputIn::Stdout, "Downloading LLVM source...\n");
 

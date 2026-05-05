@@ -1,4 +1,5 @@
 use crate::constants;
+use crate::gcc::GCCBuild;
 use crate::help;
 use crate::llvm;
 use crate::logging;
@@ -89,37 +90,45 @@ impl CommandLine {
             self.analyze(argument);
         }
 
-        self.check_tools_requirements();
-        self.prepare_all();
-    }
+        {
+            if !utils::is_tar_available() {
+                logging::log(LoggingType::Error, "tar is not installed.\n");
+            }
 
-    fn prepare_all(&mut self) {
-        self.get_mut_options().get_mut_llvm_build().setup_all();
+            if !utils::is_cmake_available() {
+                logging::log(LoggingType::Error, "cmake is not installed.\n");
+            }
 
-        if self.get_options().get_build_gcc_backend() {
-            self.get_mut_options().get_mut_gcc_build().setup_all();
-        }
-    }
+            if !utils::is_ninja_available() {
+                logging::log(LoggingType::Error, "ninja is not installed.\n");
+            }
 
-    fn check_tools_requirements(&self) {
-        if !utils::tar_is_available() {
-            logging::log(LoggingType::Error, "tar is not installed.\n");
-        }
+            let fail: bool = utils::is_tar_available()
+                && utils::is_cmake_available()
+                && utils::is_ninja_available();
 
-        if !utils::cmake_is_available() {
-            logging::log(LoggingType::Error, "cmake is not installed.\n");
-        }
-
-        if !utils::ninja_is_available() {
-            logging::log(LoggingType::Error, "ninja is not installed.\n");
+            if !fail {
+                logging::log(LoggingType::Warning, "You must install these tools!\n");
+                logging::log(LoggingType::Panic, "Requirements aren't ok!\n\n");
+            }
         }
 
-        let failed: bool =
-            utils::tar_is_available() && utils::cmake_is_available() && utils::ninja_is_available();
+        {
+            let options: &mut BuildOptions = self.get_mut_options();
 
-        if !failed {
-            logging::log(LoggingType::Warning, "You must install these tools!\n");
-            logging::log(LoggingType::Panic, "Requirements aren't ok!\n\n");
+            // LLVM
+            {
+                let llvm_build: &mut llvm::LLVMBuild = options.get_mut_llvm_build();
+                llvm_build.setup_all();
+            }
+
+            // GCC
+            {
+                if options.get_build_gcc_backend() {
+                    let gcc_build: &mut GCCBuild = options.get_mut_gcc_build();
+                    gcc_build.setup_all();
+                }
+            }
         }
     }
 }
@@ -529,12 +538,6 @@ impl CommandLine {
                 self.advance();
 
                 let _ = std::fs::remove_dir_all(utils::get_compiler_llvm_build_path());
-            }
-
-            "--clean-libclang-installation" => {
-                self.advance();
-
-                let _ = std::fs::remove_dir_all(utils::get_compiler_libclang_build_path());
             }
 
             "--debug-llvm" => {

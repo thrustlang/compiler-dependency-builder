@@ -19,5 +19,5 @@ fn main() -> ! {
 
     CompilerBuilderDependencies::new(options).build();
 
-    std::process::exit(0);
+    std::process::exit(0)
 }

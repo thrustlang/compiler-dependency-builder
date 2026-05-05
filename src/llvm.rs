@@ -53,13 +53,16 @@ pub struct LLVMBuild {
 impl LLVMBuild {
     #[inline]
     pub fn new() -> Self {
+        let c_compiler: String = utils::get_suitable_default_c_compiler().into();
+        let cpp_compiler: String = utils::get_suitable_default_cpp_compiler().into();
+
         Self {
             major: 17,
             minor: 0,
             patch: 6,
 
-            c_compiler: "clang".into(),
-            cpp_compiler: "clang++".into(),
+            c_compiler,
+            cpp_compiler,
 
             cflags: String::default(),
             cppflags: String::default(),
