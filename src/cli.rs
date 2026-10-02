@@ -1,3 +1,22 @@
+/*
+
+    Copyright (C) 2026  Stevens Benavides
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+*/
+
 use std::path::PathBuf;
 
 use crate::constants;
@@ -261,6 +280,18 @@ impl CommandLine {
                 self.get_mut_options()
                     .get_mut_llvm_build()
                     .set_c_flags(flags);
+
+                self.advance();
+            }
+
+            "--llvm-config-arg" => {
+                self.advance();
+
+                let arg: String = self.peek().to_string();
+
+                self.get_mut_options()
+                    .get_mut_llvm_build()
+                    .push_llvm_config_arg(arg);
 
                 self.advance();
             }

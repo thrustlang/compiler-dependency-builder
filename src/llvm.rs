@@ -1,3 +1,22 @@
+/*
+
+    Copyright (C) 2026  Stevens Benavides
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+*/
+
 use std::io::{BufRead, BufReader};
 use std::path::{Path, PathBuf};
 use std::process::Stdio;
@@ -48,6 +67,7 @@ pub struct LLVMBuild {
 
     build_with_custom_pipeline: bool,
     custom_pipeline: Vec<String>,
+    llvm_config_args: Vec<String>,
 
     use_llvm_package: bool,
     llvm_package: PathBuf,
@@ -92,6 +112,7 @@ impl LLVMBuild {
             debug_commands: false,
             build_with_custom_pipeline: false,
             custom_pipeline: Vec::new(),
+            llvm_config_args: Vec::new(),
 
             use_llvm_package: false,
             llvm_package: PathBuf::new(),
@@ -218,6 +239,11 @@ impl LLVMBuild {
     #[inline]
     pub fn set_custom_pipeline(&mut self, pipeline: Vec<String>) {
         self.custom_pipeline = pipeline;
+    }
+
+    #[inline]
+    pub fn push_llvm_config_arg(&mut self, arg: String) {
+        self.llvm_config_args.push(arg);
     }
 
     #[inline]
@@ -359,6 +385,11 @@ impl LLVMBuild {
     #[inline]
     pub fn get_custom_pipeline(&self) -> &[String] {
         &self.custom_pipeline
+    }
+
+    #[inline]
+    pub fn llvm_config_args(&self) -> &[String] {
+        &self.llvm_config_args
     }
 
     #[inline]
@@ -621,6 +652,8 @@ pub fn build_and_install(
         if llvm_build.need_libfii_link() {
             cmake_command.arg("-DLLVM_ENABLE_FFI=ON");
         }
+
+        cmake_command.args(llvm_build.llvm_config_args());
 
         if llvm_build.debug_commands() {
             logging::log(
