@@ -43,22 +43,24 @@ pub struct ParsedArg {
 
 impl ParsedArg {
     fn new(arg: &str) -> Self {
-        if let Some(eq_pos) = arg.find('=') {
-            let (key, value) = arg.split_at(eq_pos);
+        if arg.starts_with("--") {
+            if let Some(eq_pos) = arg.find('=') {
+                let (key, value) = arg.split_at(eq_pos);
 
-            return Self {
-                key: key.to_string(),
-                value: Some(value[1..].to_string()),
-            };
-        }
+                return Self {
+                    key: key.to_string(),
+                    value: Some(value[1..].to_string()),
+                };
+            }
 
-        if let Some(eq_pos) = arg.find(':') {
-            let (key, value) = arg.split_at(eq_pos);
+            if let Some(eq_pos) = arg.find(':') {
+                let (key, value) = arg.split_at(eq_pos);
 
-            return Self {
-                key: key.to_string(),
-                value: Some(value[1..].to_string()),
-            };
+                return Self {
+                    key: key.to_string(),
+                    value: Some(value[1..].to_string()),
+                };
+            }
         }
 
         Self {
